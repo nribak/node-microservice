@@ -1,5 +1,5 @@
-import DBAccess from "../data-access/db-access";
-import Post from "../entities/post";
+import DBAccess from "../db-access";
+import Post from "../../entities/post";
 
 export default function makeLocalPostRepository(): () => DBAccess<Post> {
     const repo: {[id: string]: Post} = {};

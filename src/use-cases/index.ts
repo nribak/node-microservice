@@ -5,10 +5,6 @@ import postDB from "../data-access";
 
 const db = postDB;
 
-const createPostUseCase = makeCreatePost(db);
-const listPostsUseCase = makeListPosts(db);
-const getPostUseCase = makeGetPost(db);
-
-export default Object.freeze({
-    createPostUseCase, listPostsUseCase, getPostUseCase
-});
+export const createPostUseCase = makeCreatePost(db);
+export const listPostsUseCase = makeListPosts(db);
+export const getPostUseCase = makeGetPost(db);
