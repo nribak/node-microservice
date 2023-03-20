@@ -1,7 +1,8 @@
 import Post from "../entities/post";
 import {Controller} from "./types";
+import {UseCase} from "../use-cases/types";
 
-export default function makeFindPost(getPostUseCase: (id: string) => Promise<Post|null>): Controller {
+export default function makeFindPost(getPostUseCase: UseCase<string, Post|null>): Controller {
     return async ({query}) => {
         const id = query?.id;
         const post = id ? await getPostUseCase(id) : null;

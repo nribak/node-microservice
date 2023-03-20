@@ -1,5 +1,5 @@
-import makeServer from "./app/server";
-import makeRouter from "./app/router";
+import makeServer from "./server";
+import makeRouter from "./router";
 
 const port = 4000;
 const server = makeServer();
