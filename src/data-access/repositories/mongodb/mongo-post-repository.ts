@@ -23,6 +23,15 @@ export function makeMongoPostRepository(instance: MongoDBInstance): () => DBAcce
         insert: async (attr): Promise<string|null> => {
             const res = await collection.insertOne(attr)
             return res.insertedId.toHexString();
+        },
+        deleteById: async (id): Promise<MongoPost|null> => {
+            try {
+                const item = await collection.findOneAndDelete({_id: new ObjectId(id)})
+                return item.value
+            } catch (e: any) {
+                console.log(e.message);
+                return null;
+            }
         }
     })
 }
