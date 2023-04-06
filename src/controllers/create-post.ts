@@ -1,8 +1,7 @@
 import {Controller} from "./types";
-import Post from "../entities/post";
-import {UseCase} from "../use-cases/types";
+import {CreatePostUseCase} from "../use-cases/create-post";
 
-export default function makeCreatePost(createPostUseCase: UseCase<any, Post|null>): Controller {
+export default function makeCreatePost(createPostUseCase: CreatePostUseCase): Controller {
     return async ({body}) => {
         const post = await createPostUseCase(body);
         if(post)

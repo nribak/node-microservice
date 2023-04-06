@@ -1,27 +1,26 @@
-import Post from "../entities/post";
 import DBAccess from "./db-access";
+import {MongoPost} from "./repositories/mongodb/entities/mongo-post";
 
 export interface PostsDBTransactions {
-    insert: (post: Post) => Promise<boolean>
-    findOne: (id: string) => Promise<Post|null>
-    findAll: () => Promise<Post[]>
-    queryByTitle: (title: string) => Promise<Post[]>
+    insert: (post: MongoPost) => Promise<string|null>
+    findOne: (id: string) => Promise<MongoPost|null>
+    findAll: () => Promise<MongoPost[]>
 }
-export default function makePostsDB(makeDB: () => DBAccess<Post>): PostsDBTransactions {
+export default function makePostsDB(makeDB: () => DBAccess<MongoPost>): PostsDBTransactions {
     return Object.freeze({
-        insert: async (post: Post): Promise<boolean> => {
+        insert: async (post: MongoPost): Promise<string|null> => {
             const {insert} = makeDB();
             return await insert(post);
         },
-        findOne: async (id: string): Promise<Post|null> => {
+        findOne: async (id: string): Promise<MongoPost|null> => {
             const {find} = makeDB();
             return await find(id)
         },
-        findAll: async (): Promise<Post[]> => {
+        findAll: async (): Promise<MongoPost[]> => {
             const {queryBy} = makeDB();
             return await queryBy({});
         },
-        queryByTitle: async (title: string): Promise<Post[]> => {
+        queryByTitle: async (title: string): Promise<MongoPost[]> => {
             const {queryBy} = makeDB();
             return await queryBy({title})
         }

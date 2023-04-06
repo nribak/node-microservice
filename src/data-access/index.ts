@@ -1,8 +1,12 @@
 import makePostsDB from "./posts-db";
-import makeLocalPostRepository from "./repositories/post-local-repository";
+import MongoDBInstance from "./repositories/mongodb/mongo-creator";
+import {makeMongoPostRepository} from "./repositories/mongodb/mongo-post-repository";
 
-const localPostRepository = makeLocalPostRepository();
-const postDB = makePostsDB(localPostRepository);
+const mongoInstance = new MongoDBInstance();
+
+// const localPostRepository: () => DBAccess<MongoPost> = makeLocalRepository<MongoPost>({});
+const mongoPostDBRepository = makeMongoPostRepository(mongoInstance);
+
+export const postDB = makePostsDB(mongoPostDBRepository);
 
 
-export default postDB;
