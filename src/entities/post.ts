@@ -8,11 +8,12 @@ export default interface Post {
 
 
 export function buildMakePost(textVerifier: (text: string) => boolean): (post: any, id: string) => Post {
-    return ({title, details}, id) => {
+    return ({title, details, createAt, updatedAt}, id) => {
         const now = Date.now();
         return {
             id,
-            createAt: now, updatedAt: now,
+            createAt: createAt ?? now,
+            updatedAt: updatedAt ?? now,
             title: textVerifier(title) ? title : 'BANNED',
             details: textVerifier(details) ? details : 'BANNED'
         }

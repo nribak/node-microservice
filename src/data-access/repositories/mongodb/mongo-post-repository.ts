@@ -3,6 +3,8 @@ import DBAccess from "../../db-access";
 import {ObjectId} from "mongodb";
 import {MongoPost} from "./entities/mongo-post";
 
+type MongoPostSummary = Omit<MongoPost, 'details'>;
+
 export function makeMongoPostRepository(instance: MongoDBInstance): () => DBAccess<MongoPost> {
     const collection = instance.collection<MongoPost>('post');
     return () => ({
@@ -15,9 +17,10 @@ export function makeMongoPostRepository(instance: MongoDBInstance): () => DBAcce
             }
 
         },
-        queryBy: (query): Promise<MongoPost[]> => {
-            const res = collection.find(query);
-            return res.toArray()
+        queryBy: async (query): Promise<MongoPost[]> => {
+            const res = collection.find<MongoPostSummary>(query);
+            const arr = await res.toArray()
+            return arr.map(item => ({...item, details: ''}));
 
         },
         insert: async (attr): Promise<string|null> => {

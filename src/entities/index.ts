@@ -1,6 +1,6 @@
 import {buildMakePost} from "./post";
 
-const textVerifier = (text: string) => text.length > 1;
+const textVerifier = (text: string) => true;
 
 const makePost = buildMakePost(textVerifier);
 
