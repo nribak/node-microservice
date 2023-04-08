@@ -1,9 +1,9 @@
 import MongoDBInstance from "./mongo-creator";
 import DBAccess from "../../db-access";
-import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 import {MongoPost} from "./entities/mongo-post";
 
-type MongoPostSummary = Omit<MongoPost, 'details'>;
+type MongoPostSummary = WithId<Omit<MongoPost, 'details'>>;
 
 export function makeMongoPostRepository(instance: MongoDBInstance): () => DBAccess<MongoPost> {
     const collection = instance.collection<MongoPost>('post');
@@ -17,11 +17,9 @@ export function makeMongoPostRepository(instance: MongoDBInstance): () => DBAcce
             }
 
         },
-        queryBy: async (query): Promise<MongoPost[]> => {
-            const res = collection.find<MongoPostSummary>(query);
-            const arr = await res.toArray()
-            return arr.map(item => ({...item, details: ''}));
-
+        queryBy: async (query): Promise<WithId<Partial<MongoPost>>[]> => {
+            const res = collection.find<MongoPostSummary>(query, {projection: {_id: 1, title: 1, createAt: 1, updatedAt: 1}});
+            return await res.toArray();
         },
         insert: async (attr): Promise<string|null> => {
             const res = await collection.insertOne(attr)
