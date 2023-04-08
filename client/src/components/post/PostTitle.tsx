@@ -3,21 +3,24 @@ import {Box, IconButton, Stack, Typography} from "@mui/material";
 import {printableDate} from "../../data/utils";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
-import {SyntheticEvent} from "react";
+import {SyntheticEvent, useContext} from "react";
+import {ModifyContext} from "../../data/modify.context";
 
-export default function PostTitle({post, onPostEdit}: {post: Post, onPostEdit: (post: Post) => void}) {
+export default function PostTitle({post, onPostModify}: {post: Post, onPostModify: (post: Post) => void}) {
+    const {deleteItem} = useContext(ModifyContext);
     const {updatedAt, title} = post;
+
     const handleDelete = (ev: SyntheticEvent) => {
         ev.stopPropagation();
         API.deletePost(post.id).then((post) => {
             if(post)
-                window.location.reload();
+                deleteItem(post.id);
         });
     }
 
     const handleEdit = (ev: SyntheticEvent) => {
         ev.stopPropagation();
-        onPostEdit(post);
+        onPostModify(post);
     }
     return (
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">

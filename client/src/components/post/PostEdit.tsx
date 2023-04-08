@@ -1,6 +1,7 @@
 import {Button, Dialog, DialogContent, DialogTitle, Stack, TextField} from "@mui/material";
-import {ChangeEvent, FormEvent, useEffect, useState} from "react";
+import {ChangeEvent, FormEvent, useContext, useEffect, useState} from "react";
 import {API, Post} from "../../data/api";
+import {ModifyContext} from "../../data/modify.context";
 
 
 function useForm<E>(initValue: E): [E, (ev: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => void, (state: E) => void] {
@@ -15,7 +16,7 @@ function useForm<E>(initValue: E): [E, (ev: ChangeEvent<HTMLInputElement|HTMLTex
 }
 
 export default function PostEdit({isOpen, onClose, post}: {isOpen: boolean, onClose: () => void, post: Post|null|undefined}) {
-
+    const {createItem, updateItem} = useContext(ModifyContext);
     const [state, setState, newState] = useForm<{title: string, details: string}>({title: post?.title ?? '', details: post?.details ?? ''});
 
     useEffect(() => {
@@ -26,16 +27,17 @@ export default function PostEdit({isOpen, onClose, post}: {isOpen: boolean, onCl
     const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
         if(!post) {
-            API.createPost(state.title, state.details).then(post => {
-                console.log(post);
-                window.location.reload();
+            API.createPost(state.title, state.details).then(newPost => {
+                if(newPost)
+                    createItem(newPost);
             });
         } else {
-            API.updatePost(post.id, state.title, state.details).then(post => {
-                console.log(post);
-                window.location.reload();
+            API.updatePost(post.id, state.title, state.details).then(editedPost => {
+                if(editedPost)
+                    updateItem(editedPost);
             })
         }
+        onClose();
     }
 
     return (

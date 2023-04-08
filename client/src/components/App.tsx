@@ -5,6 +5,7 @@ import PostList from "./post/PostList";
 import AddButton from "./AddButton";
 import PostEdit from "./post/PostEdit";
 import {useState} from "react";
+import {createModifyActions, ModifyContext} from "../data/modify.context";
 
 export default function App() {
     const {data, isLoading, mutate} = useSWR('list', API.listPosts);
@@ -21,16 +22,15 @@ export default function App() {
         setEditablePost(null);
     }
 
-
-
-
     return (
-        <Container sx={{pt: 2}}>
-            {isLoading && <CircularProgress />}
-            {(!data || data.length === 0) && <Typography textAlign="center" variant="h4">No Posts Yet</Typography>}
-            <PostList postList={data ?? []} onPostEdit={handleEditPostClicked}/>
-            <AddButton onClick={handleCreateNew} />
-            <PostEdit isOpen={editablePost !== undefined} onClose={closeDialog} post={editablePost}/>
-        </Container>
+        <ModifyContext.Provider value={createModifyActions(mutate)}>
+            <Container sx={{pt: 2}}>
+                {isLoading && <CircularProgress />}
+                {(!data || data.length === 0) && <Typography textAlign="center" variant="h4">No Posts Yet</Typography>}
+                <PostList postList={data ?? []} onPostModify={handleEditPostClicked}/>
+                <AddButton onClick={handleCreateNew} />
+                <PostEdit isOpen={editablePost !== undefined} onClose={closeDialog} post={editablePost}/>
+            </Container>
+        </ModifyContext.Provider>
     )
 }
