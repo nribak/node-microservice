@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import {Controller, RequestWrapper} from "../controllers/types";
-import {createPost, deletePost, findPost, listPosts} from "../controllers";
+import {createPost, deletePost, findPost, listPosts, updatePost} from "../controllers";
 
 const makeExpressCallback = (controller: Controller): (req: Request, res: Response) => void => {
     return async (req, res) => {
@@ -28,6 +28,7 @@ export default function makeRouter(): Router {
     router.get('/', makeExpressCallback(listPosts));
     router.get('/:id', makeExpressCallback(findPost));
     router.delete('/:id', makeExpressCallback(deletePost));
+    router.put('/:id', makeExpressCallback(updatePost));
     return router;
 
 }

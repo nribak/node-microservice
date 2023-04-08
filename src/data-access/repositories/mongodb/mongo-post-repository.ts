@@ -35,6 +35,21 @@ export function makeMongoPostRepository(instance: MongoDBInstance): () => DBAcce
                 console.log(e.message);
                 return null;
             }
+        },
+        findAndUpdate: async (id: string, {title, details}: Partial<MongoPost>): Promise<MongoPost|null> => {
+            const set: {title?: string, details?: string} = {};
+            if(title)
+                set.title = title;
+            if(details)
+                set.details = details;
+
+            try {
+                const {value} = await collection.findOneAndUpdate({_id: new ObjectId(id)}, {$set: set}, {returnDocument: "after"})
+                return value;
+            } catch (e: any) {
+                console.log(e.message);
+                return null;
+            }
         }
     })
 }

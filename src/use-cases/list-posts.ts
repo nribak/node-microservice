@@ -4,7 +4,9 @@ import {UseCase} from "./types";
 import makePost from "../entities";
 import {MongoPostResult} from "../data-access/repositories/mongodb/entities/mongo-post";
 
-export default function makeListPosts(db: PostsDBTransactions): UseCase<void, Post[]> {
+export type ListPostsUseCase = UseCase<void, Post[]>;
+
+export default function makeListPosts(db: PostsDBTransactions): ListPostsUseCase {
     return async () => {
         const items = await db.findAll();
         return items.map((item) => {

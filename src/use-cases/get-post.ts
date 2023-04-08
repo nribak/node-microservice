@@ -3,7 +3,9 @@ import {PostsDBTransactions} from "../data-access/posts-db";
 import {UseCase} from "./types";
 import makePost from "../entities";
 
-export default function makeGetPost(db: PostsDBTransactions): UseCase<string, Post|null> {
+export type GetPostUseCase = UseCase<string, Post|null>;
+
+export default function makeGetPost(db: PostsDBTransactions): GetPostUseCase {
     return async (id) => {
         const postAttr = await db.findOne(id);
         return postAttr ? makePost(postAttr, id) : null;

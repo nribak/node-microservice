@@ -5,7 +5,8 @@ export interface PostsDBTransactions {
     insert: (post: MongoPost) => Promise<string|null>
     findOne: (id: string) => Promise<MongoPost|null>
     findAll: () => Promise<MongoPost[]>,
-    deleteItem: (id: string) => Promise<MongoPost|null>
+    deleteItem: (id: string) => Promise<MongoPost|null>,
+    updateItem: (id: string, title: string, details: string) => Promise<MongoPost|null>
 }
 export default function makePostsDB(makeDB: () => DBAccess<MongoPost>): PostsDBTransactions {
     return Object.freeze({
@@ -28,6 +29,10 @@ export default function makePostsDB(makeDB: () => DBAccess<MongoPost>): PostsDBT
         deleteItem: (id: string) => {
             const {deleteById} = makeDB();
             return deleteById(id);
+        },
+        updateItem: async (id: string, title?: string, details?: string): Promise<MongoPost|null> => {
+            const {findAndUpdate} = makeDB();
+            return findAndUpdate(id, {title, details})
         }
     })
 }
