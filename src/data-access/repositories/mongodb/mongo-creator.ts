@@ -1,11 +1,10 @@
 import {Collection, Db, Document, MongoClient} from 'mongodb';
 
-const connectionUri = "mongodb+srv://admin:MRUGJDQl81G3wJqb@cluster0.9pxnjvk.mongodb.net/?retryWrites=true&w=majority"
-
 export default class MongoDBInstance {
     private client: MongoClient;
     private db: Db;
     constructor() {
+        const connectionUri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.9pxnjvk.mongodb.net/?retryWrites=true&w=majority`
         this.client = new MongoClient(connectionUri);
         this.db = this.client.db('blog');
         console.log('MongoDB was connected');

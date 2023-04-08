@@ -5,8 +5,7 @@ import makeRouter from "./router";
 const corsOptions: CorsOptions = {
     origin: 'http://localhost:3000'
 }
-
-const port = 4000;
+const port = parseInt(process.env.PORT!);
 const server = makeServer();
 
 server.use('/posts', cors(corsOptions), makeRouter());
