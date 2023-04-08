@@ -12,7 +12,7 @@ export default function PostTitle({post, onPostEdit}: {post: Post, onPostEdit: (
         API.deletePost(post.id).then((post) => {
             if(post)
                 window.location.reload();
-        })
+        });
     }
 
     const handleEdit = (ev: SyntheticEvent) => {
@@ -21,11 +21,11 @@ export default function PostTitle({post, onPostEdit}: {post: Post, onPostEdit: (
     }
     return (
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-            <Stack direction="column" spacing={1}>
-                <Typography variant="h5">{title}</Typography>
+            <Stack direction="column" spacing={1} width="75%">
+                <Typography variant="h5" noWrap textOverflow="ellipsis">{title}</Typography>
                 <Typography variant="subtitle1">Last Updated {printableDate(updatedAt)}</Typography>
             </Stack>
-            <Box display="flex" justifyContent="end" alignItems="center">
+            <Box display="flex" justifyContent="end" alignItems="center" width="25%">
                 <IconButton onClick={handleEdit}>
                     <EditIcon color="primary" fontSize="medium"/>
                 </IconButton>

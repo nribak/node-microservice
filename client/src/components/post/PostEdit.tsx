@@ -25,12 +25,16 @@ export default function PostEdit({isOpen, onClose, post}: {isOpen: boolean, onCl
 
     const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
-        const isNew = post === null;
-        if(isNew) {
+        if(!post) {
             API.createPost(state.title, state.details).then(post => {
                 console.log(post);
                 window.location.reload();
             });
+        } else {
+            API.updatePost(post.id, state.title, state.details).then(post => {
+                console.log(post);
+                window.location.reload();
+            })
         }
     }
 

@@ -20,5 +20,8 @@ export const API = {
     },
     createPost: (title: string, details: string): Promise<Post|null> => {
         return instance.post('/', {title, details}).then(r => r.data);
+    },
+    updatePost: (id: string, title: string, details: string): Promise<Post|null> => {
+        return instance.put(`/${id}`, {title, details}).then(r => r.data);
     }
 }
