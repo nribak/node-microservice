@@ -4,7 +4,7 @@ export default class MongoDBInstance {
     private client: MongoClient;
     private db: Db;
     constructor() {
-        const connectionUri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.9pxnjvk.mongodb.net/?retryWrites=true&w=majority`
+        const connectionUri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}${process.env.MONGO_URI_SUFFIX}`;
         this.client = new MongoClient(connectionUri);
         this.db = this.client.db('blog');
         console.log('MongoDB was connected');

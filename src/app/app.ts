@@ -14,4 +14,27 @@ server.use((req, res, next) => {
     next();
 });
 
+//test redis here...
+
+// const client = createClient({
+//     password: 'LKuz9VpOjYIRpMRj6T47VJiMWeGl7KVm',
+//     socket: {
+//         host: 'redis-16239.c93.us-east-1-3.ec2.cloud.redislabs.com',
+//         port: 16239
+//     }
+// });
+//
+// client.connect().then(() => {
+//     console.log('redis is connected!!')
+//     // client.set('my-key', 'my-value').then(r => {
+//     //     console.log('data returned from redis')
+//     //     console.log(r);
+//     // })
+//     client.get('my-key').then((res) => {
+//
+//         console.log(res);
+//     })
+// })
+//
+
 server.listen(port, () => console.log('listening on port', port));
