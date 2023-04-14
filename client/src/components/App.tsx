@@ -1,18 +1,20 @@
 import {CircularProgress, Container, Typography} from "@mui/material";
 import useSWR from 'swr';
-import {API, Post} from "../data/api";
 import PostList from "./post/PostList";
 import AddButton from "./AddButton";
 import PostEdit from "./post/PostEdit";
 import {useState} from "react";
 import {createModifyActions, ModifyContext} from "../data/modify.context";
+import getAPI, {Post} from "../data/postsAPI";
 
+
+const localAPI = getAPI('local');
 export default function App() {
-    const {data, isLoading, mutate} = useSWR('list', API.listPosts);
+    const {data, isLoading, mutate} = useSWR('list', localAPI.listPosts);
     const [editablePost, setEditablePost] = useState<Post|null|undefined>(undefined);
     const closeDialog = () => setEditablePost(undefined);
     const handleEditPostClicked = ({id}: Post) => {
-        API.getPost(id).then(post => {
+        localAPI.getPost(id).then(post => {
             if(post)
                 setEditablePost(post);
         });

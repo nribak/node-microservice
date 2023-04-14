@@ -1,10 +1,10 @@
-import {API, Post} from "../../data/api";
 import {Box, IconButton, Stack, Typography} from "@mui/material";
 import {printableDate} from "../../data/utils";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import {SyntheticEvent, useContext} from "react";
 import {ModifyContext} from "../../data/modify.context";
+import getAPI, {Post} from "../../data/postsAPI";
 
 export default function PostTitle({post, onPostModify}: {post: Post, onPostModify: (post: Post) => void}) {
     const {deleteItem} = useContext(ModifyContext);
@@ -12,7 +12,7 @@ export default function PostTitle({post, onPostModify}: {post: Post, onPostModif
 
     const handleDelete = (ev: SyntheticEvent) => {
         ev.stopPropagation();
-        API.deletePost(post.id).then((post) => {
+        getAPI('local').deletePost(post.id).then((post) => {
             if(post)
                 deleteItem(post.id);
         });

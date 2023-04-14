@@ -1,11 +1,10 @@
 import Post from "../../../../entities/post";
-import {WithId} from "mongodb";
 
 export type MongoPost = Omit<Post, 'id'>;
-export type MongoPostResult = WithId<MongoPost>;
+export type MongoPostResult = MongoPost & {_id: string};
 
 export function buildMakeMongoPost(): (attr: any) => MongoPost {
-    return ({title, details, createAt}) => ({
-        title, details, createAt: createAt ?? Date.now(), updatedAt: Date.now()
+    return ({title, details, createAt, userId}) => ({
+        userId, title, details, createAt: createAt ?? Date.now(), updatedAt: Date.now()
     });
 }

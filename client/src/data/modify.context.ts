@@ -1,4 +1,4 @@
-import {Post} from "./api";
+import {Post} from "./postsAPI";
 import {createContext} from "react";
 import {KeyedMutator} from "swr/_internal";
 

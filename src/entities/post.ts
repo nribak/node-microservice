@@ -3,15 +3,17 @@ export default interface Post {
     title: string,
     details: string,
     createAt: number,
-    updatedAt: number
+    updatedAt: number,
+    userId: string
 }
 
 
 export function buildMakePost(textVerifier: (text: string) => boolean): (post: any, id: string) => Post {
-    return ({title, details, createAt, updatedAt}, id) => {
+    return ({title, details, createAt, updatedAt, userId}, id) => {
         const now = Date.now();
+        //TODO: verify that attr are valid
         return {
-            id,
+            id, userId,
             createAt: createAt ?? now,
             updatedAt: updatedAt ?? now,
             title: textVerifier(title) ? title : 'BANNED',

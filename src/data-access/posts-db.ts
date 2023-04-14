@@ -5,65 +5,68 @@ import CachingAccess from "./caching-access";
 
 export interface PostsDBTransactions {
     insert: (post: MongoPost) => Promise<string|null>
-    findOne: (id: string) => Promise<MongoPost|null>
-    findAll: () => Promise<WithId<Partial<MongoPost>>[]>,
-    deleteItem: (id: string) => Promise<MongoPost|null>,
-    updateItem: (id: string, title: string, details: string) => Promise<MongoPost|null>
+    findOne: (id: string, userId: string) => Promise<MongoPost|null>
+    findAll: (userId: string) => Promise<WithId<Partial<MongoPost>>[]>,
+    deleteItem: (id: string, userId: string) => Promise<MongoPost|null>,
+    updateItem: (id: string ,userId: string, title: string, details: string) => Promise<MongoPost|null>
 }
-
-const createQuery = (attrName: keyof MongoPostResult, attrValue: any): string => `${attrName}::${attrValue}`
-const listQueryName = 'posts';
 const entityName = 'POSTS';
-
+const createQuery = (userId: string, query?: Partial<MongoPostResult>): [string, string] => {
+    const entity = `${entityName}::${userId}`;
+    const field = Object.entries(query ?? {}).map(([key, value]) => `${key}::${value}`).join(',');
+    return [entity, field.length > 0 ? field : '*'];
+}
 
 export default function makePostsDB(makeDB: () => DBAccess<MongoPost>, makeCache: () => CachingAccess): PostsDBTransactions {
     return {
         insert: async (post: MongoPost): Promise<string|null> => {
             const {insert} = makeDB();
             const {deleteQuery} = makeCache();
+            const [queryEntry] = createQuery(post.userId);
             const id = await insert(post);
             if(id)
-                deleteQuery(entityName, listQueryName).then();
+                deleteQuery(queryEntry).then();
             return id;
         },
-        findOne: async (id: string): Promise<MongoPost|null> => {
+        findOne: async (id: string, userId): Promise<MongoPost|null> => {
             const {find} = makeDB();
             const {getQuery, setQuery} = makeCache();
-            const query = createQuery('_id', id);
-            let item = await getQuery<MongoPost>(entityName, query);
+            const [queryEntry, queryField] = createQuery(userId, {_id: id})
+            let item = await getQuery<MongoPost>(queryEntry, queryField);
             if(item === null) {
                 item = await find(id);
                 if(item)
-                    setQuery(entityName, query, item).then();
+                    setQuery(queryEntry, queryField, item).then();
             }
             return item;
         },
-        findAll: async (): Promise<WithId<Partial<MongoPost>>[]> => {
+        findAll: async (userId): Promise<WithId<Partial<MongoPost>>[]> => {
             const {queryBy} = makeDB();
             const {getQuery, setQuery} = makeCache();
-            let items = await getQuery<WithId<Partial<MongoPost>>[]>(entityName, listQueryName)
+            const [queryEntry, queryField] = createQuery(userId, {});
+            let items = await getQuery<WithId<Partial<MongoPost>>[]>(queryEntry, queryField)
             if(items === null) {
-                items = await queryBy({});
+                items = await queryBy({userId});
                 if(items && items.length > 0) {
-                    setQuery(entityName, listQueryName, items).then();
+                    setQuery(queryEntry, queryField, items).then();
                 }
             }
             return items;
         },
-        deleteItem: (id: string) => {
+        deleteItem: (id: string, userId: string) => {
             const {deleteById} = makeDB();
             const {deleteQuery} = makeCache();
-            deleteQuery(entityName, createQuery('_id', id)).then();
-            deleteQuery(entityName, listQueryName).then();
+            const [queryEntry] = createQuery(userId);
+            deleteQuery(queryEntry).then();
             return deleteById(id);
         },
-        updateItem: async (id: string, title?: string, details?: string): Promise<MongoPost|null> => {
+        updateItem: async (id: string, userId: string, title?: string, details?: string): Promise<MongoPost|null> => {
             const {findAndUpdate} = makeDB();
-            const {setQuery, deleteQuery} = makeCache();
+            const {deleteQuery} = makeCache();
             const data = await findAndUpdate(id, {title, details});
             if(data) {
-                setQuery(entityName, createQuery('_id', id), data).then();
-                deleteQuery(entityName, listQueryName).then();
+                const [queryEntry] = createQuery(userId);
+                deleteQuery(queryEntry).then();
             }
             return data;
         }

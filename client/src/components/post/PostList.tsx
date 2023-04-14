@@ -1,4 +1,4 @@
-import {Post} from "../../data/api";
+import {Post} from "../../data/postsAPI";
 import {List, ListItem} from "@mui/material";
 import PostTitle from "./PostTitle";
 

@@ -1,10 +1,9 @@
-import Post from "../entities/post";
 import {Controller} from "./types";
-import {UseCase} from "../use-cases/types";
+import {ListPostsUseCase} from "../use-cases/list-posts";
 
-export default function makeListPosts(listPostsUseCase: UseCase<void, Post[]>): Controller {
-    return async () => {
-        const posts = await listPostsUseCase();
+export default function makeListPosts(listPostsUseCase: ListPostsUseCase): Controller {
+    return async ({userId}) => {
+        const posts = await listPostsUseCase(userId);
         return {
             statusCode: 200,
             json: posts

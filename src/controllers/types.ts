@@ -1,14 +1,15 @@
-type DynamicObject = {[key: string]: string}
 export interface RequestWrapper {
-    query?: DynamicObject,
+    query?: any,
     headers?: any,
-    body?: any
+    body?: any,
+    params?: any,
+    userId: string
 }
 
 export interface ResponseWrapper {
     statusCode: number,
     json: any,
-    headers?: DynamicObject
+    headers?: any
 }
 
 export type Controller = (req: RequestWrapper) => Promise<ResponseWrapper>

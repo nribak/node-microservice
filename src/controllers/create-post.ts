@@ -2,8 +2,8 @@ import {Controller} from "./types";
 import {CreatePostUseCase} from "../use-cases/create-post";
 
 export default function makeCreatePost(createPostUseCase: CreatePostUseCase): Controller {
-    return async ({body}) => {
-        const post = await createPostUseCase(body);
+    return async ({body, userId}) => {
+        const post = await createPostUseCase({...body, userId});
         if(post)
             return {
                 statusCode: 201,
