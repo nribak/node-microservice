@@ -1,8 +1,6 @@
-import React, {ReactNode} from 'react';
-import ReactDOM from 'react-dom/client';
-import App from "./components/App";
+import type { AppProps } from 'next/app'
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
-
+import React, {ReactNode} from "react";
 
 const theme = createTheme({
     palette: {mode: 'dark'}
@@ -16,5 +14,6 @@ const Wrapper = ({children}: {children: ReactNode}) => (
 )
 
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(<Wrapper><App /></Wrapper>);
+export default function MyApp({ Component, pageProps }: AppProps) {
+    return <Wrapper><Component {...pageProps} /></Wrapper>
+}
