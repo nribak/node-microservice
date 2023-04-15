@@ -1,4 +1,4 @@
-import CachingAccess from "../../caching-access";
+import CachingAccess from "../../interfaces/caching-access";
 import Redis from "ioredis";
 
 export default function makeRedisCacheRepository<E extends object>(redis: Promise<Redis>): () => CachingAccess {

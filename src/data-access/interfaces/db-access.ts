@@ -1,5 +1,5 @@
 import {WithId} from "mongodb";
-
+//TODO: remove dependency of mongoDB from here
 export default interface DBAccess<T> {
     find: (id: string) => Promise<T|null>
     queryBy: (query: any) => Promise<WithId<Partial<T>>[]>

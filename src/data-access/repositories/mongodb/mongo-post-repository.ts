@@ -1,5 +1,5 @@
 import MongoDBInstance from "./mongo-creator";
-import DBAccess from "../../db-access";
+import DBAccess from "../../interfaces/db-access";
 import {ObjectId, WithId} from "mongodb";
 import {MongoPost} from "./entities/mongo-post";
 

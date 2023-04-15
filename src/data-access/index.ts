@@ -1,4 +1,4 @@
-import makePostsDB from "./posts-db";
+import makePostsDB from "./posts-data-access";
 import MongoDBInstance from "./repositories/mongodb/mongo-creator";
 import {makeMongoPostRepository} from "./repositories/mongodb/mongo-post-repository";
 import createRedisInstance from "./repositories/redis/redis-creator";
