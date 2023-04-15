@@ -1,16 +1,25 @@
-import {CircularProgress, Container, Typography} from "@mui/material";
+import {Container} from "@mui/material";
 import useSWR from 'swr';
-import PostList from "./post/PostList";
-import AddButton from "./AddButton";
-import PostEdit from "./post/PostEdit";
 import {useState} from "react";
-import {createModifyActions, ModifyContext} from "../data/modify.context";
-import getAPI, {Post} from "../data/postsAPI";
+import {createModifyActions, ModifyContext} from "@/data/modify.context";
+import getAPI, {Post} from "@/data/postsAPI";
+import SearchBar from "@/components/SearchBar";
+import PostList from "@/components/post/PostList";
+import AddButton from "@/components/AddButton";
+import PostEdit from "@/components/post/PostEdit";
 
 
 const localAPI = getAPI('local');
+const listPosts = ([_, query]: [string, string]) => {
+    if(query.length > 0)
+        return localAPI.queryPosts(query);
+    else
+        return localAPI.listPosts();
+}
+
 export default function App() {
-    const {data, isLoading, mutate} = useSWR('list', localAPI.listPosts);
+    const [query, setQuery] = useState('');
+    const {data, isLoading, mutate} = useSWR(['list', query], listPosts);
     const [editablePost, setEditablePost] = useState<Post|null|undefined>(undefined);
     const closeDialog = () => setEditablePost(undefined);
     const handleEditPostClicked = ({id}: Post) => {
@@ -27,8 +36,7 @@ export default function App() {
     return (
         <ModifyContext.Provider value={createModifyActions(mutate)}>
             <Container sx={{pt: 2}}>
-                {isLoading && <CircularProgress />}
-                {(!data || data.length === 0) && <Typography textAlign="center" variant="h4">No Posts Yet</Typography>}
+                <SearchBar onQuerySubmitted={setQuery} isLoading={isLoading}/>
                 <PostList postList={data ?? []} onPostModify={handleEditPostClicked}/>
                 <AddButton onClick={handleCreateNew} />
                 <PostEdit isOpen={editablePost !== undefined} onClose={closeDialog} post={editablePost}/>

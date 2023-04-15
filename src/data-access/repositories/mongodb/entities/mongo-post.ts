@@ -1,6 +1,6 @@
 import Post from "../../../../entities/post";
 
-export type MongoPost = Omit<Post, 'id'>;
+export type MongoPost = Omit<Post, 'id'>;   //TODO: change name to DBPost
 export type MongoPostResult = MongoPost & {_id: string};
 
 export function buildMakeMongoPost(): (attr: any) => MongoPost {

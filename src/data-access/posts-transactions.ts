@@ -1,11 +1,11 @@
 import DataAccess from "./interfaces/data-access";
-import {MongoPost, MongoPostResult} from "./repositories/mongodb/entities/mongo-post";
+import {MongoPost} from "./repositories/mongodb/entities/mongo-post";
 import DBAccess from "./interfaces/db-access";
 import CachingAccess from "./interfaces/caching-access";
 import {WithId} from "mongodb";
 
 const entityName = 'POSTS';
-const createQuery = (userId: string, query?: Partial<MongoPostResult>): [string, string] => {
+const createQuery = (userId: string, query?: object): [string, string] => {
     const entity = `${entityName}::${userId}`;
     const field = Object.entries(query ?? {}).map(([key, value]) => `${key}::${value}`).join(',');
     return [entity, field.length > 0 ? field : '*'];
@@ -82,5 +82,27 @@ export class UpdatePostTransaction extends DataAccess<{ id: string, userId: stri
         const [queryEntry] = createQuery(userId);
         if (result)
             await cache.deleteQuery(queryEntry);
+    }
+}
+
+export class QueryPostTransaction extends DataAccess<{userId: string, query: string}, WithId<Partial<MongoPost>>[], MongoPost> {
+    protected async preWork({userId, query}: { userId: string; query: string }, cache: CachingAccess): Promise<void | WithId<Partial<MongoPost>>[]> {
+        const [queryEntry, queryField] = createQuery(userId, {query});
+        const result = await cache.getQuery<WithId<Partial<MongoPost>>[]>(queryEntry, queryField)
+        if(result)
+            return result;
+    }
+
+    protected async execute({query, userId}: { userId: string; query: string }, db: DBAccess<MongoPost>): Promise<WithId<Partial<MongoPost>>[]> {
+        const regex = new RegExp(`.*${query}.*`);
+        const q = {userId, title: regex};
+        return await db.queryBy(q);
+    }
+
+    protected async postWork({userId, query}: { userId: string; query: string }, result: WithId<Partial<MongoPost>>[], cache: CachingAccess) {
+        const [queryEntry, queryField] = createQuery(userId, {query});
+        if (result.length > 0) {
+            await cache.setQuery(queryEntry, queryField, result);
+        }
     }
 }
