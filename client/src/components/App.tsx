@@ -8,7 +8,6 @@ import PostList from "@/components/post/PostList";
 import AddButton from "@/components/AddButton";
 import PostEdit from "@/components/post/PostEdit";
 
-
 const localAPI = getAPI('local');
 const listPosts = ([_, query]: [string, string]) => {
     if(query.length > 0)
