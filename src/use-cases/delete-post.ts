@@ -8,7 +8,7 @@ export type DeletePostUseCase = UseCase<CommonUseCaseParams, Post|null>;
 
 export default function makeDeletePostUseCase(db: PostsDBTransactions): DeletePostUseCase {
     return async ({id, userId}) => {
-        const data = await db.deleteItem.start({id, userId});
+        const data = await db.deleteItem.cache().exec({id, userId});
         if(data) {
             const id = (data as MongoPostResult)._id;
             return makePost(data, id);

@@ -8,7 +8,7 @@ export type UpdatePostUseCase = UseCase<[CommonUseCaseParams, any], Post|null>;
 export default function makeUpdatePostUseCase(db: PostsDBTransactions): UpdatePostUseCase {
     return async ([{id, userId}, attr]) => {
         if(!id) return null;
-        const mongoPost = await db.updateItem.start({id, userId, title: attr.title, details: attr.details});
+        const mongoPost = await db.updateItem.cache().exec({id, userId, title: attr.title, details: attr.details});
         return mongoPost ? makePost(mongoPost, id) : null;
     }
 }
