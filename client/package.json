@@ -20,7 +20,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next build && next start"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
