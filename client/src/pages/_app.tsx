@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app'
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import React, {ReactNode} from "react";
 import Head from "next/head";
+import {SessionProvider} from "next-auth/react";
 
 const theme = createTheme({
     palette: {mode: 'dark'}
@@ -9,7 +10,7 @@ const theme = createTheme({
 
 const Wrapper = ({children}: {children: ReactNode}) => (
     <>
-        <Head><title>Posts</title></Head>
+        <Head><title>Private Posts</title></Head>
         <ThemeProvider theme={theme}>
             <CssBaseline />
             {children}
@@ -19,5 +20,6 @@ const Wrapper = ({children}: {children: ReactNode}) => (
 
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-    return <Wrapper><Component {...pageProps} /></Wrapper>
+    const {session} = pageProps;
+    return <Wrapper><SessionProvider session={session}><Component {...pageProps} /></SessionProvider></Wrapper>
 }

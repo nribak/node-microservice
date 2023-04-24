@@ -1,11 +1,11 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import { getCookie } from 'cookies-next';
 import getAPI, {Post} from "../../../data/postsAPI";
+import getSessionUserId from "@/data/session.middleware";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const {id} = req.query;
     const {method} = req;
-    const userId = getCookie('userid', {req, res});
+    const userId = await getSessionUserId(req, res);
     let post: Post|null = null;
     if (id && userId) {
         const api = getAPI('posts', userId.toString());
@@ -26,5 +26,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if(post)
         res.status(200).json(post);
     else
-        res.status(404).json({});
+        res.status(404).json({message: 'post not found'});
 }

@@ -5,8 +5,9 @@ import {createModifyActions, ModifyContext} from "@/data/modify.context";
 import getAPI, {Post} from "@/data/postsAPI";
 import SearchBar from "@/components/SearchBar";
 import PostList from "@/components/post/PostList";
-import AddButton from "@/components/AddButton";
+import AddButton from "@/components/common/AddButton";
 import PostEdit from "@/components/post/PostEdit";
+import TopBar from "@/components/TopBar";
 
 const localAPI = getAPI('local');
 const listPosts = ([_, query]: [string, string]) => {
@@ -18,7 +19,7 @@ const listPosts = ([_, query]: [string, string]) => {
 
 export default function App() {
     const [query, setQuery] = useState('');
-    const {data, isLoading, mutate} = useSWR(['list', query], listPosts);
+    const {data, isLoading, mutate} = useSWR(['posts', query], listPosts);
     const [editablePost, setEditablePost] = useState<Post|null|undefined>(undefined);
     const closeDialog = () => setEditablePost(undefined);
     const handleEditPostClicked = ({id}: Post) => {
@@ -34,6 +35,7 @@ export default function App() {
 
     return (
         <ModifyContext.Provider value={createModifyActions(mutate)}>
+            <TopBar />
             <Container sx={{pt: 2}}>
                 <SearchBar onQuerySubmitted={setQuery} isLoading={isLoading}/>
                 <PostList postList={data ?? []} onPostModify={handleEditPostClicked}/>

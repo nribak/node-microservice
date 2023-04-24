@@ -1,13 +1,13 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {getFakeUserId} from "@/data/utils";
 import getAPI, {Post} from "@/data/postsAPI";
+import getSessionUserId from "@/data/session.middleware";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const {method} = req;
-    const userId = getFakeUserId(req, res);
+    const userId = await getSessionUserId(req, res);
     let result: Post[]|Post|null = null;
     if(userId) {
-        const api = getAPI('posts', userId.toString());
+        const api = getAPI('posts', userId);
         switch (method) {
             case 'GET':
                 result = await api.listPosts()
@@ -20,6 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if(result)
         res.status(200).json(result);
-    else
-        res.status(404).json({});
+    // else
+    //     res.status(404).json({});
 }

@@ -1,9 +1,8 @@
-import {Post} from "../../data/postsAPI";
 import {List, ListItem} from "@mui/material";
 import PostTitle from "./PostTitle";
+import {Post} from "@/data/postsAPI";
 
 export default function PostList({postList, onPostModify}: {postList: Post[], onPostModify: (post: Post) => void}) {
-
     return (
         <List>
             {postList.map(post => {
