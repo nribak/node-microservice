@@ -2,7 +2,7 @@
 node_modules
 dist
 *.drawio
-.env
+server/.env
 client/.next
 client/public/service/*
 client/.env.local

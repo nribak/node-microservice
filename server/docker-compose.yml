@@ -1,0 +1,8 @@
+version: 3,
+services:
+  nodejs-server:
+    image: nadavribak/posts-service
+    environment:
+      DOCKER_KEY: some_key_from_docker_compose
+    ports:
+      - 4000:4000
