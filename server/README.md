@@ -32,4 +32,4 @@ REDIS_EXPIRE=<redis_expiration in seconds>
 
 <hr />
 
-![diagram](diagrams/clean_arch.png)
+![diagram](../diagrams/clean_arch.png)
