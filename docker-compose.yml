@@ -21,4 +21,10 @@ services:
     image: redis:latest
     ports:
       - 6379:6379
+  nodejs-next-client:
+    image: nadavribak/posts-client
+    ports:
+      - 3000:3000
+    environment:
+      POSTS_SERVICE_URI: nodejs-server
 
