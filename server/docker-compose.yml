@@ -3,6 +3,22 @@ services:
   nodejs-server:
     image: nadavribak/posts-service
     environment:
-      DOCKER_KEY: some_key_from_docker_compose
+      MONGO_CONNECTION_URI: mongodb://nodejs-mongo:27017/nodejs-kubernetes
+      REDIS_HOST: nodejs-redis
+      REDIS_PORT: 6379
+      PORT: 4000
+      REDIS_EXPIRE: 3600
     ports:
       - 4000:4000
+    depends_on:
+      - nodejs-mongo
+      - nodejs-redis
+  nodejs-mongo:
+    image: mongo:latest
+    ports:
+      - 23017:27017
+  nodejs-redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+

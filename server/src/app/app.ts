@@ -12,9 +12,9 @@ server.use((req, res, next) => {
 
 
 server.use('/posts', verifyUserMiddleware, makeRouter());
+
 server.get('/ping', (req, res) => {
-    const text = `<h2>PONG: ${process.env.DOCKER_KEY}</h2>`;
-    res.send(text);
+    res.send('pong');
 })
 
 server.listen(port, () => console.log('listening on port', port));
