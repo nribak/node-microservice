@@ -6,3 +6,8 @@ export const verifyUserMiddleware = (req: Request, res: Response, next: NextFunc
         next();
     else throw Error('')
 }
+
+export const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.method, req.url, req.params, req.path, req.query);
+    next();
+}

@@ -1,7 +1,7 @@
 version: 3,
 services:
   nodejs-server:
-    image: nadavribak/posts-service
+    image: nadavribak/posts-server
     environment:
       MONGO_CONNECTION_URI: mongodb://nodejs-mongo:27017/nodejs-kubernetes
       REDIS_HOST: nodejs-redis

@@ -1,4 +1,5 @@
 import axios from "axios";
+import https from 'https';
 
 export interface Post {
     id: string,
@@ -17,13 +18,12 @@ export interface API {
     updatePost: (id: string, title: string, details: string) => Promise<Post|null>
 }
 
-const postsInstance = axios.create({baseURL: `http://${process.env.POSTS_SERVICE_URI || 'localhost'}:4000/posts`});
+const postsInstance = axios.create({baseURL: `https://${process.env.POSTS_SERVICE_URI || 'localhost'}:4000/posts`, httpsAgent: new https.Agent({rejectUnauthorized: false})});
 const localInstance = axios.create({baseURL: '/api/posts'});
 
 //TODO: should be split into client and server api
 export default function getAPI(type: 'local'|'posts', userId?: string): API {
     const instance = type === 'posts' ? postsInstance : localInstance;
-    console.log('POSTS', process.env.POSTS_SERVICE_URI);
     return {
         listPosts: () => {
             return instance.get('/', {params: {userId}}).then(r => r.data);
