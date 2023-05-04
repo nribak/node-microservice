@@ -8,7 +8,8 @@ export type CreatePostUseCase = UseCase<any, Post|null>;
 
 export default function makeCreatePost(db: PostsDBTransactions): CreatePostUseCase {
     return async (postInfo) => {
-        const mongoPost = makeMongoPost(postInfo);
+        const post = makePost(postInfo, '0');
+        const mongoPost = makeMongoPost(post);
         const id = await db.insert.cache().exec(mongoPost);
         if(id)
             return makePost(mongoPost, id);

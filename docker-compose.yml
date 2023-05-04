@@ -1,7 +1,8 @@
 version: 3,
 services:
   nodejs-server:
-    image: nadavribak/posts-server
+   # image: nadavribak/posts-server
+    build: 'server/.'
     environment:
       MONGO_CONNECTION_URI: mongodb://nodejs-mongo:27017/nodejs-kubernetes
       REDIS_HOST: nodejs-redis
@@ -16,9 +17,10 @@ services:
   nodejs-redis:
     image: redis:latest
   nodejs-next-client:
-    image: nadavribak/posts-client
+#    image: nadavribak/posts-client
+    build: 'client/.'
     ports:
-      - 80:3000
+      - 3000:3000
     environment:
       POSTS_SERVICE_URI: nodejs-server
 

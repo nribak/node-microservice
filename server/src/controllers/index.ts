@@ -6,16 +6,16 @@ import {
     queryPostsUseCase,
     updatePostUseCase
 } from "../use-cases";
-import makeCreatePost from "./create-post";
-import makeFindPost from "./find-post";
-import makeListPosts from "./list-posts";
+import makeCreatePostController from "./create-post";
+import makeFindPostController from "./find-post";
+import makeListPostsController from "./list-posts";
 import makeDeletePostController from "./delete-post";
 import makeUpdatePostController from "./update-post";
 import makeQueryPostsController from "./query-posts";
 
-export const createPost = makeCreatePost(createPostUseCase);
-export const findPost = makeFindPost(getPostUseCase);
-export const listPosts = makeListPosts(listPostsUseCase);
-export const deletePost = makeDeletePostController(deletePostUseCase);
-export const updatePost = makeUpdatePostController(updatePostUseCase);
-export const queryPost = makeQueryPostsController(queryPostsUseCase);
+export const createPostController = makeCreatePostController(createPostUseCase);
+export const findPostController = makeFindPostController(getPostUseCase);
+export const listPostsController = makeListPostsController(listPostsUseCase);
+export const deletePostController = makeDeletePostController(deletePostUseCase);
+export const updatePostController = makeUpdatePostController(updatePostUseCase);
+export const queryPostController = makeQueryPostsController(queryPostsUseCase);

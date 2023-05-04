@@ -1,7 +1,7 @@
 import {Controller} from "./types";
 import {GetPostUseCase} from "../use-cases/get-post";
 
-export default function makeFindPost(getPostUseCase: GetPostUseCase): Controller {
+export default function makeFindPostController(getPostUseCase: GetPostUseCase): Controller {
     return async ({params, userId}) => {
         const id = params?.id;
         const post = id ? await getPostUseCase({id, userId}) : null;
